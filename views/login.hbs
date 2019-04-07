@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+      <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+      <link rel="stylesheet" href="/public/css/main.css">
+    <title></title>
+  </head>
+  <body class="page_login">
+    <div class="login">
+      <div class="logo">
+        <img src="/public/images/logo.png" alt="">
+      </div>
+      <div class="login_form">
+        <form class="" id="loginForm">
+
+          <input type="text" name="email" id="email" value="" placeholder="Email"><br>
+          <input type="password" name="password" id="password" value="" placeholder="Password"><br>
+
+          <div class="form_button">
+            <div class="form_button_href">
+              <a href="/singin">Зарегистрироваться</a><br>
+              <a id="reset_password">Зaбыли пароль</a>
+            </div>
+            <div class="form_button_log">
+              <button type="submit" name="log_but">Войти</button>
+            </div>
+          </div>
+
+        </form>
+
+        <form class="recover_pass" id="recover_pass" style="display:none;">
+
+          <input type="text" name="confirm_password" value=""><br>
+
+          <div class="form_button">
+            <div class="form_button_log">
+              <button type="submit" name="button">Confirm</button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+    <!--{{>menu}}
+    <form class = "login" id="loginForm">
+      <h2>Вход</h2>
+      <label for="email">Email</label>
+      <input type="text" name="email" id="email"><br>
+      <label for="password">Password</label>
+      <input type="password" name="password"><br>
+      <button type="submit" name="button">Login</button>
+      <a id="reset_password" class="btn btn-sm btn-primary">Сбросить пароль</a>
+    </form>
+
+    <form class="recover_pass" id="recover_pass">
+      <label for="confirm_password">Confirm_password</label>
+      <input type="text" name="confirm_password" value="">
+      <button type="submit" name="button">Confirm</button>
+    </form>!-->
+
+    <script>
+    function LoginUser(userEmail,userPassword) {
+      $.ajax({
+        url:'/api/login',
+        contentType:'application/json',
+        type:'POST',
+        data:JSON.stringify({
+          email:userEmail,
+          password:userPassword,
+        }),
+      }).done(function (data){
+        if(!data.ok){
+          $('.login img ').after('<p class="error">'+data.error+'</p>');
+         if(data.fields){
+            data.fields.forEach(function(item){
+              $('input[name='+item+']').addClass('error');
+            });
+          }
+        }else{
+          $(location).attr('href','/acount');
+        }
+      });
+    }
+
+    $('input').on('focus',function(){
+      $('p.error').remove();
+      $('p.success').remove();
+      $('input').removeClass('error');
+    });
+
+     $("#loginForm").submit(function (e) {
+       e.preventDefault();
+      var email = this.elements["email"].value;
+      var password = this.elements["password"].value;
+
+      LoginUser(email,password);
+    });
+//resert_password
+function ResertPassword(userEmail) {
+  $.ajax({
+    url:'/api/resertpassword',
+    contentType:'application/json',
+    type:'PUT',
+    data:JSON.stringify({
+      email:userEmail,
+    }),
+  }).done(function (data){
+    if(!data.ok){
+      $('.login img').after('<p class="error">'+data.error+'</p>');
+     if(data.fields){
+        data.fields.forEach(function(item){
+          $('input[name='+item+']').addClass('error');
+        });
+      }
+    }else{
+      //$(location).attr('href','/acount');
+      $('#loginForm').hide();
+      $('#recover_pass').show();
+    }
+  });
+}
+
+
+$("#reset_password").click(function (e) {
+    e.preventDefault();
+    var userEmail = $("#email").val();
+    ResertPassword(userEmail);
+})
+//Confirm password
+
+ $("#recover_pass").submit(function (e) {
+   e.preventDefault();
+  var email = $("#email").val();
+  var password = this.elements["confirm_password"].value;
+
+  LoginUser(email,password);
+});
+    </script>
+
+  </body>
+</html>

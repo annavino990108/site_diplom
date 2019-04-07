@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/public/css/main.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <title></title>
+  </head>
+  <body class="acount-body">
+
+    <div class="top-menu">
+      <div class="logo-img">
+        <img src="/public/images/logo.png" alt="" class="logoi">
+      </div>
+      <div class="menu-rigth">
+        <div>
+          <span>Hello {{user.firstName}}</span>
+        </div>
+        <div>
+            <a href="/api/logout">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="button">
+      <form  method="POST" enctype="multipart/form-data" name="fileinfo" id="fileinfo">
+        <input type="text" name="category" value="" id="category">
+        <input type="file" name="file" value="" id="file" required>
+        <button type="submit" name="button"class="upload-button">Загрузить</button>
+      </form>
+    </div>
+
+    <div class="block-imgs">
+      {{#each file}}
+      <div>
+        <img src="/uploads{{this.path}}" alt="" class="image">
+        <div class="">
+          <a href="#" class="removeLink" id = "{{this._id}}">удалить</a>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+<script>
+  $('#fileinfo').on('submit',function(e){
+    e.preventDefault();
+    var formData = new FormData(this);
+    //var category = this.elements["category"].value;
+
+    $.ajax({
+      type:'POST',
+      url:'/api/upload',
+      data: formData,
+      processData:false,
+      contentType:false,
+      success:function(r){
+        //console.log(r);
+      location.reload();
+      },
+      error:function(e){
+        console.log(e);
+      }
+    });
+  });
+
+  $(".removeLink").click(function () {
+            var id = $(this).attr("id");
+DeleteImage(id);
+});
+function DeleteImage(id){
+    $.ajax({
+      url:'/api/deleteimage/'+id,
+      contentType: "application/json",
+      method: "DELETE",
+      success:function(){
+        location.reload();
+    }
+  })
+}
+</script>
+  </body>
+</html>

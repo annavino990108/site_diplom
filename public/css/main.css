@@ -1,0 +1,97 @@
+.page_login {
+  background-color: #320E57;
+  margin: 0; }
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  margin: 30px auto; }
+
+.login_form form input, select {
+  border: none;
+  border-bottom: 1px solid #fff;
+  background: none;
+  outline: none;
+  width: 400px;
+  margin: 10px 0; }
+
+.form_button {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column; }
+
+.form_button_log {
+  align-self: flex-end; }
+
+.form_button button {
+  border-radius: 20%;
+  background-color: #000;
+  border: none;
+  cursor: pointer;
+  width: 150px;
+  height: 30px;
+  color: #fff;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+
+.login_form form a {
+  width: 200px;
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer; }
+
+.login_form form a:hover {
+  color: #000; }
+
+.error{
+  color: red;
+  text-align: center;
+}
+.acount-body{
+  margin:0;
+}
+.top-menu{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 50px;
+  background-color: #320E57;
+  justify-content: space-between;
+}
+.menu-rigth{
+  display:flex;
+  flex-direction: row;
+}
+.menu-rigth div{
+  color:#fff;
+  margin: 10px;
+}
+.top-menu div a{
+  text-decoration: none;
+  color:#fff;
+  cursor: pointer;
+}
+.logoi{
+  width: 200px;
+  height: 50px;
+}
+.block-imgs{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  margin: 50px;
+}
+.block-imgs div{
+  width: 300px;
+  height: 200px;
+/*  border: 1px solid #000;*/
+  margin: 10px;
+}
+.block-imgs .image{
+  width: 100%;
+  height: 100%;
+}
+.options_img{

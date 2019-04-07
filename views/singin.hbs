@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Singin</title>
+    <link rel="stylesheet" href="/public/css/main.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  </head>
+  <body class="page_login">
+      <div class="login">
+        <div class="logo">
+          <img src="/public/images/logo.png" alt="">
+        </div>
+        <div class="login_form">
+          <form id="singinForm">
+
+            <input type="text" name="firstName" value="" placeholder="First name"><br>
+            <input type="text" name="lastName" value="" placeholder="Last name"><br>
+            <input type="text" name="city" value="" placeholder="City"><br><br>
+            <input type="text" name="email" id="email" value="" placeholder="Email"><br>
+
+            <select name="role">
+
+              <option value="photographer">Photographer</option>
+              <option value="user">Simple user</option>
+
+            </select><br>
+
+            <input type="text" name="password" value="" placeholder="Passwords"><br>
+
+            <div class="form_button">
+              <div class="form_button_log">
+                <button type="submit" name="log_but">Зарегистрироваться</button>
+              </div>
+            </div>
+
+          </form>
+
+          <form id="verifi" style="display:none;" >
+
+            <label for="secret_token"></label>
+            <input type="text" name="secret_token"><br>
+
+            <div class="form_button">
+              <div class="form_button_log">
+                <button type="submit" name="button">Подтвердить</button>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    <script>
+    function VerifUser(email,secret_token) {
+      $.ajax({
+        url:'/api/verif',
+        contentType:'application/json',
+        type:'PUT',
+        data:JSON.stringify({
+          email,
+          secret_token,
+        }),
+      }).done(function (data){
+        if(!data.ok){
+          $('.verif h2').after('<p class="error">'+data.error+'</p>');
+         if(data.fields){
+            data.fields.forEach(function(item){
+              $('input[name='+item+']').addClass('error');
+            });
+          }
+        }else{
+          //$('.singin h2').after('<p class="success">ОТЛИЧНО!</p>');
+          $(location).attr('href','/acount');
+        }
+      });
+    }
+
+    $("#verifi").click(function (e) {
+      e.preventDefault();
+      var email = $("#email").val();
+      var secret_token = this.elements["secret_token"].value;
+     VerifUser(email,secret_token);
+    });
+
+    function SinginUser(firstName,lastName,userEmail,userPassword,cityUser,roleUser) {
+      $.ajax({
+        url:'/api/singin',
+        contentType:'application/json',
+        type:'POST',
+        data:JSON.stringify({
+          firstName:firstName,
+          lastName:lastName,
+          email:userEmail,
+          password:userPassword,
+          city:cityUser,
+          role:roleUser
+        }),
+      }).done(function (data){
+        if(!data.ok){
+          $('#singinForm h2').after('<p class="error">'+data.error+'</p>');
+         if(data.fields){
+            data.fields.forEach(function(item){
+              $('input[name='+item+']').addClass('error');
+            });
+          }
+        }else{
+          $('#singinForm').hide();
+          $('#verifi').show();
+        }
+      });
+    }
+
+    $('input').on('focus',function(){
+      $('p.error').remove();
+      $('p.success').remove();
+      $('input').removeClass('error');
+    });
+
+     $("#singinForm").submit(function (e) {
+       e.preventDefault();
+      var email = this.elements["email"].value;
+      var password = this.elements["password"].value;
+      var firstName = this.elements["firstName"].value;
+      var lastName = this.elements["lastName"].value;
+      var city = this.elements["city"].value;
+      var role = this.elements["role"].value;
+
+      SinginUser(firstName,lastName,email,password,city,role);
+    });
+
+    </script>
+
+  </body>
+</html>
